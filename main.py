@@ -6,7 +6,8 @@ logging.basicConfig(level=logging.DEBUG,
                     filename='sort_log.log',
                     filemode='w',
                     encoding='utf-8')
-
+INPUT_FILE = 'user_support_letters.csv'
+OUTPUT_FILE = 'sorted_cat.csv'
 CATEGORIES = {
               'Security': ['пароль',
                            'выйти',
@@ -74,7 +75,7 @@ def choose_category(message: str) -> tuple[str, set]:
         return (message, quest_categ)
 
 
-def get_data_csv(filename: str = 'user_support_letters.csv') -> list[str]:
+def get_data_csv(filename: str) -> list[str]:
     """Returns a list of messages from users."""
     data = []
     try:
@@ -82,13 +83,12 @@ def get_data_csv(filename: str = 'user_support_letters.csv') -> list[str]:
             for line in file:
                 data.append(line.rstrip('\n'))
     except FileNotFoundError:
-        logging.ERROR('Файл не найден')
+        logging.error('Файл не найден')
     return data
 
 
 def save_data(results: list,
-              filename: str = 'sorted_cat.csv',
-              unsorted_names: str = 'unsorted.csv') -> None:
+              filename: str,) -> None:
     """Stores sort results."""
     with open(filename, 'w', encoding='utf-8') as file:
         for question in results:
@@ -97,9 +97,18 @@ def save_data(results: list,
 
 def main():
     """The main function of the file."""
-    database = get_data_csv()
+    database = get_data_csv(INPUT_FILE)
+    if not database:
+        logging.error('Работа завершена некорректно.')
+        return
     sorted_cat = sort_categories(database)
-    save_data(sorted_cat)
+    if len(database) == len(sorted_cat):
+        logging.info('Работа завершена успешно.')
+    elif len(database) > len(sorted_cat):
+        logging.warning('Имеются несортированные сообщения')
+    else:
+        logging.warning('Некоторые данные были утеряны')
+    save_data(sorted_cat, OUTPUT_FILE)
 
 
 if __name__ == '__main__':
