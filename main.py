@@ -9,49 +9,70 @@ logging.basicConfig(level=logging.DEBUG,
 INPUT_FILE = 'user_support_letters.csv'
 OUTPUT_FILE = 'sorted_cat.csv'
 CATEGORIES = {
-              'Security': ['пароль',
-                           'выйти',
-                           'аккаунт', ],
+              'Security': ['парол',
+                           'безопасност',
+                           'хакер',
+                           'доступ',
+                           'защит', ],
 
-              'Refunds': ['верн',
-                          'возвр',
-                          'отпис',
+              'Refunds': ['возвр',
+                          'отмен',
                           'деньги',
-                          'гроші',
-                          'отменить', ],
+                          'возмещение',
+                          'плат',
+                          'отписаться', ],
 
-              'Troubleshooting': ['не могу',
-                                  'неправильно',
-                                  'проблем',
-                                  'медленно',
-                                  'когда',
-                                  'не заходит',
-                                  'не работает',
-                                  'ошиб',
+              'Troubleshooting': ['проблем',
+                                  'ошибк',
+                                  'не работ',
+                                  'сбой',
+                                  'недосту',
+                                  'неправильн',
+                                  'медлен',
+                                  'производительн',
+                                  'баг',
                                   'завис',
-                                  'скорость',
                                   'почин', ],
 
-              'Account': ['регистрация'],
+              'Account': ['регистр',
+                          'логин',
+                          'профил',
+                          'настройк',
+                          'изменение данных',
+                          'аккаунт',
+                          'учетн', ],
 
               'Advertising and Collaboration': ['реклам',
-                                                'сотруд'],
+                                                'партнерс',
+                                                'сотрудн',
+                                                'продвиж',
+                                                'маркет', ],
 
-              'Limits': ['сколько', 'лимит'],
-              'Payments': ['плат',
-                           'налич', ],
+              'Limits': ['огранич',
+                         'лимит',
+                         'сколько я мог',
+                         'как увеличить количество',
+                         'период', ],
 
-              'Features': ['формат',
-                           'функциональность',
-                           'можно ли',
-                           'решение',
-                           'функция',
-                           'как',
+              'Payments': ['оплат',
+                           'платеж',
+                           'биллинг',
+                           'подписк', ],
+
+              'Features': ['функц',
+                           'возможност',
+                           'новые возможности',
+                           'обновлен',
+                           'можно ли использ',
+                           'api',
+                           'когда уже можн',
+                           'как это можн',
                            'автоматич',
-                           'максималь',
-                           'антиплагиат',
-                           'версия', ],
+                           'формат',
+                           'антиплагиат', ],
              }
+
+MAX_CATEGORIES = 2
 
 
 def sort_categories(questions: list[str]) -> list[tuple[str, set]]:
@@ -67,10 +88,11 @@ def choose_category(message: str) -> tuple[str, set]:
     quest_categ = set()
     for k, v in CATEGORIES.items():
         for word in v:
-            if word in message.lower():
+            if word in message.lower() and len(quest_categ) <= MAX_CATEGORIES:
                 quest_categ.add(k)
     if len(quest_categ) == 0:
         logging.debug(f"Unsorted data: {message}")
+        return (message, {'Не сортировано'})
     else:
         return (message, quest_categ)
 
@@ -92,7 +114,10 @@ def save_data(results: list,
     """Stores sort results."""
     with open(filename, 'w', encoding='utf-8') as file:
         for question in results:
-            file.write(f'{question[0]} | {question[1]} \n')
+            try:
+                file.write(f'{question[0]} | {question[1]} \n')
+            except TypeError:
+                logging.error(f'Ошибка при попытке записи {question}')
 
 
 def main():
