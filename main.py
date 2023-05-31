@@ -73,7 +73,7 @@ CATEGORIES = {
              }
 
 
-def sort_categories(questions: list[str]) -> list[tuple[str, set]]:
+def sort_categories(questions: list[str]) -> list[tuple[str]]:
     """Lists messages and their categories."""
     result = []
     for question in questions:
