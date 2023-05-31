@@ -83,18 +83,18 @@ def sort_categories(questions: list[str]) -> list[tuple[str, set]]:
     return result
 
 
-def choose_category(message: str) -> tuple[str, set]:
-    """Returns tuple of message and set of categories."""
-    quest_categ = set()
+def choose_category(message: str) -> tuple[str]:
+    """Returns tuple of message and category."""
+    quest_categ = dict()
     for k, v in CATEGORIES.items():
         for word in v:
-            if word in message.lower() and len(quest_categ) <= MAX_CATEGORIES:
-                quest_categ.add(k)
+            if word in message.lower():
+                quest_categ[k] = quest_categ.get(k, 0) + 1
     if len(quest_categ) == 0:
         logging.debug(f"Unsorted data: {message}")
-        return (message, {'Не сортировано'})
+        return (message, 'Не сортировано')
     else:
-        return (message, quest_categ)
+        return (message, max(quest_categ, key=quest_categ.get))
 
 
 def get_data_csv(filename: str) -> list[str]:
