@@ -72,8 +72,6 @@ CATEGORIES = {
                            'антиплагиат', ],
              }
 
-MAX_CATEGORIES = 2
-
 
 def sort_categories(questions: list[str]) -> list[tuple[str, set]]:
     """Lists messages and their categories."""
