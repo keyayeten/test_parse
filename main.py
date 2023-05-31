@@ -75,10 +75,7 @@ CATEGORIES = {
 
 def sort_categories(questions: list[str]) -> list[tuple[str]]:
     """Lists messages and their categories."""
-    result = []
-    for question in questions:
-        result.append(choose_category(question))
-    return result
+    return list(map(choose_category, questions))
 
 
 def choose_category(message: str) -> tuple[str]:
