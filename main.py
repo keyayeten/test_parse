@@ -1,11 +1,6 @@
 import logging
 
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    filename='sort_log.log',
-                    filemode='w',
-                    encoding='utf-8')
 INPUT_FILE = 'user_support_letters.csv'
 OUTPUT_FILE = 'sorted_cat.csv'
 CATEGORIES = {
@@ -132,5 +127,10 @@ def main():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        filename='sort_log.log',
+                        filemode='w',
+                        encoding='utf-8')
     logging.info('Работа начата')
     main()
